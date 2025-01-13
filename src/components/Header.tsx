@@ -16,6 +16,7 @@ export default function Header() {
     { href: "/reports", label: "Reports" },
     { href: "/categories", label: "Categories" },
     { href: "/budgets", label: "Budgets" },
+    { href: "/profile", label: "profile" },
   ];
 
   return (
