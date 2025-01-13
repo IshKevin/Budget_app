@@ -11,16 +11,16 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: "/", label: "Home" },
+    { href: "/home", label: "Home" },
     { href: "/transactions", label: "Transactions" },
     { href: "/reports", label: "Reports" },
     { href: "/categories", label: "Categories" },
+    { href: "/budgets", label: "Budgets" },
   ];
 
   return (
     <header className="w-full bg-gradient-to-r from-green-200 via-blue-200 to-white border-b shadow-md">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
-        {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <img
             src="/assets/logo.png"
@@ -32,7 +32,7 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
+        
         <nav className="hidden md:flex space-x-6">
           {navLinks.map((link) => (
             <Link
@@ -50,7 +50,6 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Logout Button (Desktop Only) */}
         <div className="hidden md:block">
           <LogoutLink>
             <button className="px-4 py-2 bg-red-500 text-white rounded-md shadow hover:bg-red-600 transition text-sm">
@@ -59,7 +58,6 @@ export default function Header() {
           </LogoutLink>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           className="md:hidden flex items-center justify-center w-10 h-10 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -81,7 +79,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Navigation Menu */}
+      
       {isMenuOpen && (
         <div className="md:hidden bg-white shadow-md">
           <nav className="flex flex-col items-center space-y-4 p-4">
