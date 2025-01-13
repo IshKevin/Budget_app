@@ -1,10 +1,8 @@
 'use client';
 
-import { useKindeAuth } from '@kinde-oss/kinde-auth-nextjs';
+import {RegisterLink, LoginLink} from "@kinde-oss/kinde-auth-nextjs/components";
 
 export default function AuthPage() {
-  const { login, register } = useKindeAuth();
-
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
       <div className="text-center">
@@ -14,16 +12,18 @@ export default function AuthPage() {
         </p>
         <div className="space-x-4">
           <button
-            onClick={() => login()}
             className="px-6 py-3 bg-blue-500 text-white font-medium rounded-md shadow hover:bg-blue-600 transition"
           >
+            <LoginLink>
             Log In
+            </LoginLink>
           </button>
           <button
-            onClick={() => register()}
             className="px-6 py-3 bg-green-500 text-white font-medium rounded-md shadow hover:bg-green-600 transition"
           >
+            <RegisterLink>
             Sign Up
+            </RegisterLink>
           </button>
         </div>
       </div>
