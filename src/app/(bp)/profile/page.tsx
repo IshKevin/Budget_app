@@ -4,6 +4,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 export default async function ProfilePage() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+  console.log(user);
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-blue-100">
