@@ -5,7 +5,7 @@
 1. [x] Allow users to create an account by providing email, password.
 2. [x] Allow users to log in with their credentials.
 3. [ ] Provide an option for users to reset their password if they forget it.
-4. [x] Implement account details as Profile 
+4. [x] Implement account details as Profile
 
 ## Adding Transactions
 
