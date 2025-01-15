@@ -10,24 +10,10 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-// Users table
-export const users = pgTable("users", {
-  id: varchar("id", { length: 255 }).primaryKey(),
-  firstName: varchar("first_name").notNull(),
-  lastName: varchar("last_name").notNull(),
-  email: varchar("email").unique().notNull(),
-  username: varchar("username").unique().notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
-
 // Accounts table
 export const accounts = pgTable("accounts", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id),
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
   name: varchar("name").notNull(),
   type: varchar("type", { enum: ["BANK", "MOBILE_MONEY", "CASH"] }).notNull(),
   balance: numeric("balance", { precision: 10, scale: 2 }).notNull(),
@@ -43,7 +29,7 @@ export const accounts = pgTable("accounts", {
 // Categories table
 export const categories = pgTable("categories", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id),
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
   parentId: integer("parent_id").references(() => categories.id),
   name: varchar("name").notNull(),
   description: text("description"),
@@ -57,7 +43,7 @@ export const categories = pgTable("categories", {
 // Transactions table
 export const transactions = pgTable("transactions", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id),
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
   accountId: integer("account_id").notNull().references(() => accounts.id),
   categoryId: integer("category_id").notNull().references(() => categories.id),
   type: varchar("type", { enum: ["INCOME", "EXPENSE"] }).notNull(),
@@ -74,7 +60,7 @@ export const transactions = pgTable("transactions", {
 // Budgets table
 export const budgets = pgTable("budgets", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id),
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
   categoryId: integer("category_id").notNull().references(() => categories.id),
   name: varchar("name").notNull(),
   amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
@@ -91,7 +77,7 @@ export const budgets = pgTable("budgets", {
 // Notification settings table
 export const notificationSettings = pgTable("notification_settings", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id),
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
   budgetId: integer("budget_id").notNull().references(() => budgets.id),
   email: boolean("email").notNull().default(true),
   push: boolean("push").notNull().default(false),
@@ -106,7 +92,7 @@ export const notificationSettings = pgTable("notification_settings", {
 // Reports table
 export const reports = pgTable("reports", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id),
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
   startDate: timestamp("start_date").notNull(),
   endDate: timestamp("end_date").notNull(),
   format: varchar("format", { enum: ["PDF", "CSV", "EXCEL"] }).notNull(),
@@ -120,28 +106,11 @@ export const reports = pgTable("reports", {
 });
 
 // Relations
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
-  categories: many(categories),
-  transactions: many(transactions),
-  budgets: many(budgets),
-  notificationSettings: many(notificationSettings),
-  reports: many(reports),
-}));
-
-export const accountsRelations = relations(accounts, ({ one, many }) => ({
-  user: one(users, {
-    fields: [accounts.userId],
-    references: [users.id],
-  }),
+export const accountsRelations = relations(accounts, ({ many }) => ({
   transactions: many(transactions),
 }));
 
 export const categoriesRelations = relations(categories, ({ one, many }) => ({
-  user: one(users, {
-    fields: [categories.userId],
-    references: [users.id],
-  }),
   parent: one(categories, {
     fields: [categories.parentId],
     references: [categories.id],
@@ -151,10 +120,6 @@ export const categoriesRelations = relations(categories, ({ one, many }) => ({
 }));
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
-  user: one(users, {
-    fields: [transactions.userId],
-    references: [users.id],
-  }),
   account: one(accounts, {
     fields: [transactions.accountId],
     references: [accounts.id],
@@ -166,10 +131,6 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
 }));
 
 export const budgetsRelations = relations(budgets, ({ one, many }) => ({
-  user: one(users, {
-    fields: [budgets.userId],
-    references: [users.id],
-  }),
   category: one(categories, {
     fields: [budgets.categoryId],
     references: [categories.id],
@@ -180,20 +141,9 @@ export const budgetsRelations = relations(budgets, ({ one, many }) => ({
 export const notificationSettingsRelations = relations(
   notificationSettings,
   ({ one }) => ({
-    user: one(users, {
-      fields: [notificationSettings.userId],
-      references: [users.id],
-    }),
     budget: one(budgets, {
       fields: [notificationSettings.budgetId],
       references: [budgets.id],
     }),
   })
 );
-
-export const reportsRelations = relations(reports, ({ one }) => ({
-  user: one(users, {
-    fields: [reports.userId],
-    references: [users.id],
-  }),
-}));

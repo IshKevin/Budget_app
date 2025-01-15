@@ -1,5 +1,5 @@
 {
-  "id": "2fef54fd-7dd0-4b36-a98e-5bf666b7ee1d",
+  "id": "7c717c20-7018-4a9f-bc22-a30c172de2f7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,8 +14,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "kinde_id": {
+          "name": "kinde_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -66,21 +66,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "accounts_user_id_users_id_fk": {
-          "name": "accounts_user_id_users_id_fk",
-          "tableFrom": "accounts",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -97,8 +83,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "kinde_id": {
+          "name": "kinde_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -156,19 +142,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "budgets_user_id_users_id_fk": {
-          "name": "budgets_user_id_users_id_fk",
-          "tableFrom": "budgets",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "budgets_category_id_categories_id_fk": {
           "name": "budgets_category_id_categories_id_fk",
           "tableFrom": "budgets",
@@ -199,8 +172,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "kinde_id": {
+          "name": "kinde_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -240,19 +213,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "categories_user_id_users_id_fk": {
-          "name": "categories_user_id_users_id_fk",
-          "tableFrom": "categories",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "categories_parent_id_categories_id_fk": {
           "name": "categories_parent_id_categories_id_fk",
           "tableFrom": "categories",
@@ -283,8 +243,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "kinde_id": {
+          "name": "kinde_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -332,19 +292,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "notification_settings_user_id_users_id_fk": {
-          "name": "notification_settings_user_id_users_id_fk",
-          "tableFrom": "notification_settings",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "notification_settings_budget_id_budgets_id_fk": {
           "name": "notification_settings_budget_id_budgets_id_fk",
           "tableFrom": "notification_settings",
@@ -375,8 +322,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "kinde_id": {
+          "name": "kinde_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -428,21 +375,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "reports_user_id_users_id_fk": {
-          "name": "reports_user_id_users_id_fk",
-          "tableFrom": "reports",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -459,8 +392,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "kinde_id": {
+          "name": "kinde_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -518,19 +451,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "transactions_user_id_users_id_fk": {
-          "name": "transactions_user_id_users_id_fk",
-          "tableFrom": "transactions",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "transactions_account_id_accounts_id_fk": {
           "name": "transactions_account_id_accounts_id_fk",
           "tableFrom": "transactions",
@@ -560,65 +480,6 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "first_name": {
-          "name": "first_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "last_name": {
-          "name": "last_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
