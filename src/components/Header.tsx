@@ -22,6 +22,7 @@ export default function Sidebar() {
 
   const navLinks = [
     { href: "/home", label: "Home", icon: Home },
+    { href: "/budget", label: "Budgets", icon: CreditCard },
     { href: "/transactions", label: "Transactions", icon: CreditCard },
     { href: "/reports", label: "Reports", icon: BarChart },
     { href: "/categories", label: "Categories", icon: Tag },

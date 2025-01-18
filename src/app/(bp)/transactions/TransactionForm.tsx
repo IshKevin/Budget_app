@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 
 type PersonalAccount = {
   id: number;
@@ -12,20 +12,20 @@ type PersonalAccount = {
 
 type FinancialTransaction = {
   id: number;
-  userId: string;
+  kindeId: string;
   accountId: number;
   categoryId: number;
   type: "INCOME" | "EXPENSE";
   amount: number;
   description?: string;
-  transactionDate: string;
+  date: Date;
 };
 
 interface TransactionFormProps {
   accounts: PersonalAccount[];
   categories: { id: number; name: string }[];
   transaction?: FinancialTransaction;
-  onSubmit: (data: Partial<FinancialTransaction>) => Promise<void>;
+  onSubmit: (data: FormData) => Promise<void>;
 }
 
 const TransactionForm = ({ 
@@ -34,68 +34,34 @@ const TransactionForm = ({
   transaction, 
   onSubmit 
 }: TransactionFormProps) => {
-  const [formData, setFormData] = useState({
-    accountId: transaction?.accountId || accounts[0]?.id || 0,
-    categoryId: transaction?.categoryId || categories[0]?.id || 0,
-    type: transaction?.type || 'EXPENSE',
-    amount: transaction?.amount || 0,
-    description: transaction?.description || '',
-    transactionDate: transaction?.transactionDate 
-      ? new Date(transaction.transactionDate).toISOString().split('T')[0] 
-      : new Date().toISOString().split('T')[0]
-  });
-
   const [error, setError] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'amount' || name === 'accountId' || name === 'categoryId'
-        ? parseFloat(value) || 0
-        : value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
-    setIsSubmitting(true);
 
     try {
-      if (formData.amount <= 0) {
-        setError('Amount must be greater than 0');
-        return;
-      }
-
-      if (!formData.accountId) {
-        setError('Please select an account');
-        return;
-      }
-
-      if (!formData.categoryId) {
-        setError('Please select a category');
-        return;
-      }
-
-      await onSubmit(formData);
-      if (!transaction) {
-        // Reset form only for new transactions
-        setFormData(prev => ({
-          ...prev,
-          amount: 0,
-          description: '',
-          transactionDate: new Date().toISOString().split('T')[0]
-        }));
-      }
+      const formData = new FormData(e.currentTarget);
+      
+      startTransition(async () => {
+        try {
+          await onSubmit(formData);
+          if (!transaction) {
+            (e.target as HTMLFormElement).reset();
+            // Set default date to today
+            const dateInput = document.getElementById('date') as HTMLInputElement;
+            if (dateInput) {
+              dateInput.value = new Date().toISOString().split('T')[0];
+            }
+          }
+        } catch (error) {
+          setError(error instanceof Error ? error.message : 'Failed to submit transaction');
+        }
+      });
     } catch (error) {
       setError('Failed to submit transaction. Please try again.');
       console.error('Error submitting transaction:', error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -118,8 +84,7 @@ const TransactionForm = ({
         <select
           id="accountId"
           name="accountId"
-          value={formData.accountId}
-          onChange={handleChange}
+          defaultValue={transaction?.accountId || accounts[0]?.id || ''}
           className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
           required
         >
@@ -139,8 +104,7 @@ const TransactionForm = ({
         <select
           id="categoryId"
           name="categoryId"
-          value={formData.categoryId}
-          onChange={handleChange}
+          defaultValue={transaction?.categoryId || categories[0]?.id || ''}
           className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
           required
         >
@@ -160,8 +124,7 @@ const TransactionForm = ({
         <select
           id="type"
           name="type"
-          value={formData.type}
-          onChange={handleChange}
+          defaultValue={transaction?.type || 'EXPENSE'}
           className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
         >
           <option value="EXPENSE">Expense</option>
@@ -179,23 +142,23 @@ const TransactionForm = ({
           type="number"
           step="0.01"
           min="0"
-          value={formData.amount}
-          onChange={handleChange}
+          defaultValue={transaction?.amount || ''}
           className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
           required
         />
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="transactionDate">
+        <label className="block text-sm font-medium" htmlFor="date">
           Date
         </label>
         <input
-          id="transactionDate"
-          name="transactionDate"
+          id="date"
+          name="date"
           type="date"
-          value={formData.transactionDate}
-          onChange={handleChange}
+          defaultValue={transaction?.date 
+            ? new Date(transaction.date).toISOString().split('T')[0] 
+            : new Date().toISOString().split('T')[0]}
           className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
           required
         />
@@ -208,8 +171,7 @@ const TransactionForm = ({
         <textarea
           id="description"
           name="description"
-          value={formData.description}
-          onChange={handleChange}
+          defaultValue={transaction?.description || ''}
           className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
           rows={3}
         />
@@ -217,10 +179,10 @@ const TransactionForm = ({
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={isPending}
         className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300"
       >
-        {isSubmitting 
+        {isPending 
           ? 'Processing...' 
           : transaction 
             ? 'Update Transaction' 
