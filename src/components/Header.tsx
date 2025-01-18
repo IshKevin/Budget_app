@@ -21,11 +21,12 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { href: "/Home", label: "Home", icon: Home },
+    { href: "/home", label: "Home", icon: Home },
     { href: "/transactions", label: "Transactions", icon: CreditCard },
     { href: "/reports", label: "Reports", icon: BarChart },
     { href: "/categories", label: "Categories", icon: Tag },
-    { href: "/notifications", label: "Notifications", icon: Bell },
+    { href: "/profile", label: "Notifications", icon: Bell },
+    { href: "/account", label: "accounts", icon: CreditCard },
   ];
 
   return (
