@@ -69,6 +69,12 @@ CREATE TABLE "transactions" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+DROP TABLE "budget_alerts" CASCADE;--> statement-breakpoint
+DROP TABLE "expense_categories" CASCADE;--> statement-breakpoint
+DROP TABLE "finance_reports" CASCADE;--> statement-breakpoint
+DROP TABLE "financial_transactions" CASCADE;--> statement-breakpoint
+DROP TABLE "personal_accounts" CASCADE;--> statement-breakpoint
+DROP TABLE "spending_budgets" CASCADE;--> statement-breakpoint
 ALTER TABLE "budgets" ADD CONSTRAINT "budgets_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "categories" ADD CONSTRAINT "categories_parent_id_categories_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."categories"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "notification_settings" ADD CONSTRAINT "notification_settings_budget_id_budgets_id_fk" FOREIGN KEY ("budget_id") REFERENCES "public"."budgets"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
