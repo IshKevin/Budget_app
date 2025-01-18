@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { transactions } from "@/db/schema";
+import { accounts, categories, transactions } from "@/db/schema";
 import { eq, and, between } from "drizzle-orm";
 
 export const getTransactions = async (kindeId: string, filters?: {
@@ -46,4 +46,23 @@ export const updateTransaction = async (id: number, data: Partial<Transaction>) 
     .update(transactions)
     .set(data)
     .where(eq(transactions.id, id));
+};
+
+
+export const getTransactionsWithDetails = async (kindeId: string) => {
+  return await db
+    .select({
+      id: transactions.id,
+      date: transactions.date,
+      type: transactions.type,
+      amount: transactions.amount,
+      description: transactions.description,
+      category: categories.name,
+      account: accounts.name,
+    })
+    .from(transactions)
+    .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+    .innerJoin(categories, eq(transactions.categoryId, categories.id))
+    .where(eq(transactions.kindeId, kindeId))
+    .orderBy(transactions.date);
 };
