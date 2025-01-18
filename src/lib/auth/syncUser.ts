@@ -1,4 +1,4 @@
-import { findUserByEmail, addUser } from "../query/users";
+import { findUserByEmail, addUser } from "../queries/users";
 
 export const syncUser = async (kindeUser: any) => {
   if (!kindeUser) {
