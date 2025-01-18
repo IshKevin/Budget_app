@@ -1,11 +1,24 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { LucideIcon, CreditCard, FileText, TrendingUp, PlusCircle } from "lucide-react";
 import GreetingComponent from "./Greeting"; // Assuming you've created this component
+import Dashboard from "./Dashboard"; // Importing the Dashboard component
 
 export default async function Home() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const userName = user?.given_name || "User";
+
+  // Mock Data for Accounts and Transactions
+  const accounts = [
+    { id: 1, name: "Checking Account", type: "Checking", balance: 5000, currency: "USD" },
+    { id: 2, name: "Savings Account", type: "Savings", balance: 7000, currency: "USD" },
+  ];
+
+  const transactions = [
+    { id: 1, type: "EXPENSE", amount: 100, date: "2025-01-12" },
+    { id: 2, type: "INCOME", amount: 2000, date: "2025-01-10" },
+    { id: 3, type: "EXPENSE", amount: 150, date: "2025-01-09" },
+  ];
 
   return (
     <div className="p-6 md:p-10 bg-gray-50 min-h-screen">
@@ -62,11 +75,16 @@ export default async function Home() {
         />
       </section>
 
+      {/* Dashboard Integration */}
+      <section className="mb-8">
+        <Dashboard accounts={accounts} transactions={transactions} />
+      </section>
+
       {/* Recent Transactions Section */}
       <section>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Recent Transactions</h2>
         <ul className="bg-white rounded-lg shadow-md divide-y">
-          {[ 
+          {[
             { id: 1, name: "Groceries", amount: "$100", date: "Jan 12" },
             { id: 2, name: "Rent", amount: "$1,200", date: "Jan 1" },
             { id: 3, name: "Utilities", amount: "$150", date: "Jan 10" },
