@@ -60,14 +60,14 @@ export default function Sidebar() {
       gradient: "from-green-400 to-green-600"
     },
     { 
-      href: "/account", 
+      href: "/profile", 
       label: "Notifications", 
       icon: Bell,
       description: "Alerts and updates",
       gradient: "from-yellow-400 to-yellow-600"
     },
     { 
-      href: "/accounts", 
+      href: "/account", 
       label: "Accounts", 
       icon: Building2,
       description: "Manage accounts",
