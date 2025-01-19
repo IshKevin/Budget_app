@@ -19,31 +19,25 @@ export default function CategoryForm({ category, onSubmit }: CategoryFormProps) 
     parentId: category?.parentId || undefined,
   });
 
-  const [errors, setErrors] = useState({
-    name: false,
-  });
+  const [errors, setErrors] = useState({ name: false });
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-    
-    // Handle number inputs
-    if (type === 'number') {
-      setFormData(prev => ({
+
+    if (type === "number") {
+      setFormData((prev) => ({
         ...prev,
         [name]: value ? Number(value) : undefined,
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         [name]: value,
       }));
     }
 
-    // Clear error when user starts typing
     if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         [name]: false,
       }));
@@ -53,12 +47,8 @@ export default function CategoryForm({ category, onSubmit }: CategoryFormProps) 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // Validate required fields
     if (!formData.name?.trim()) {
-      setErrors(prev => ({
-        ...prev,
-        name: true,
-      }));
+      setErrors((prev) => ({ ...prev, name: true }));
       return;
     }
 
@@ -70,53 +60,51 @@ export default function CategoryForm({ category, onSubmit }: CategoryFormProps) 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-2xl font-bold mb-4">
-        {category ? "Edit Category" : "New Category"}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <h2 className="text-2xl font-bold text-green-800 mb-4">
+        {category ? "Edit Category" : "New Transaction Category"}
       </h2>
-      
+
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Category Name</label>
+        <label className="block text-sm font-medium text-green-800">Category Name</label>
         <input
           type="text"
           name="name"
           value={formData.name || ""}
           onChange={handleChange}
-          className={`w-full p-2 border rounded-md ${
-            errors.name ? "border-red-500" : ""
+          className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+            errors.name ? "border-red-500" : "border-gray-300"
           }`}
         />
-        {errors.name && (
-          <p className="text-red-500 text-sm">Category name is required</p>
-        )}
+        {errors.name && <p className="text-red-500 text-sm">Category name is required</p>}
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Description</label>
+        <label className="block text-sm font-medium text-green-800">Description</label>
         <textarea
           name="description"
           value={formData.description || ""}
           onChange={handleChange}
-          className="w-full p-2 border rounded-md"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
           rows={3}
         />
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Parent Category</label>
+        <label className="block text-sm font-medium text-green-800">Parent Category</label>
         <input
           type="number"
           name="parentId"
           value={formData.parentId || ""}
           onChange={handleChange}
-          className="w-full p-2 border rounded-md"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
           placeholder="Parent Category ID (optional)"
         />
       </div>
 
       <button
         type="submit"
-        className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+        className="w-full px-4 py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
       >
         {category ? "Update" : "Create"} Category
       </button>
