@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   pgTable,
   serial,
@@ -10,10 +11,10 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-// Accounts table
+
 export const accounts = pgTable("accounts", {
   id: serial("id").primaryKey(),
-  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(),
   name: varchar("name").notNull(),
   type: varchar("type", { enum: ["BANK", "MOBILE_MONEY", "CASH"] }).notNull(),
   balance: numeric("balance", { precision: 10, scale: 2 }).notNull(),
@@ -26,11 +27,13 @@ export const accounts = pgTable("accounts", {
     .$onUpdate(() => new Date()),
 });
 
-// Categories table
+// @ts-ignore
 export const categories = pgTable("categories", {
   id: serial("id").primaryKey(),
-  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
-  parentId: integer("parent_id").references(() => categories.id),
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(), 
+  parentId: integer("parent_id")
+  // @ts-ignore
+  .references(() => categories.id),
   name: varchar("name").notNull(),
   description: text("description"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -40,10 +43,10 @@ export const categories = pgTable("categories", {
     .$onUpdate(() => new Date()),
 });
 
-// Transactions table
+
 export const transactions = pgTable("transactions", {
   id: serial("id").primaryKey(),
-  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(), 
   accountId: integer("account_id").notNull().references(() => accounts.id),
   categoryId: integer("category_id").notNull().references(() => categories.id),
   type: varchar("type", { enum: ["INCOME", "EXPENSE"] }).notNull(),
@@ -57,10 +60,10 @@ export const transactions = pgTable("transactions", {
     .$onUpdate(() => new Date()),
 });
 
-// Budgets table
+
 export const budgets = pgTable("budgets", {
   id: serial("id").primaryKey(),
-  kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
+  kindeId: varchar("kinde_id", { length: 255 }).notNull(),
   categoryId: integer("category_id").notNull().references(() => categories.id),
   name: varchar("name").notNull(),
   amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
@@ -74,7 +77,7 @@ export const budgets = pgTable("budgets", {
     .$onUpdate(() => new Date()),
 });
 
-// Notification settings table
+
 export const notificationSettings = pgTable("notification_settings", {
   id: serial("id").primaryKey(),
   kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
@@ -89,7 +92,7 @@ export const notificationSettings = pgTable("notification_settings", {
     .$onUpdate(() => new Date()),
 });
 
-// Reports table
+
 export const reports = pgTable("reports", {
   id: serial("id").primaryKey(),
   kindeId: varchar("kinde_id", { length: 255 }).notNull(), // Store Kinde user ID
@@ -105,7 +108,7 @@ export const reports = pgTable("reports", {
     .$onUpdate(() => new Date()),
 });
 
-// Relations
+
 export const accountsRelations = relations(accounts, ({ many }) => ({
   transactions: many(transactions),
 }));

@@ -37,13 +37,9 @@ interface Transaction {
 
 interface TransactionTableProps {
   transactions: Transaction[];
-  onGenerateReport: (format: "PDF" | "CSV" | "EXCEL") => Promise<void>;
 }
 
-export function TransactionTable({ 
-  transactions,
-  onGenerateReport 
-}: TransactionTableProps) {
+export function TransactionTable({ transactions }: TransactionTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState({
     start: "",
@@ -51,9 +47,9 @@ export function TransactionTable({
   });
   const [selectedType, setSelectedType] = useState<string>("ALL");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isExporting, setIsExporting] = useState(false);
   const itemsPerPage = 10;
 
-  // Filter transactions based on search, date range, and type
   const filteredTransactions = transactions.filter(transaction => {
     const matchesSearch = 
       transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -70,7 +66,6 @@ export function TransactionTable({
     return matchesSearch && matchesDateRange && matchesType;
   });
 
-  // Calculate pagination
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedTransactions = filteredTransactions.slice(
@@ -78,7 +73,6 @@ export function TransactionTable({
     startIndex + itemsPerPage
   );
 
-  // Calculate totals for filtered data
   const totals = filteredTransactions.reduce(
     (acc, transaction) => {
       if (transaction.type === "INCOME") {
@@ -91,9 +85,84 @@ export function TransactionTable({
     { income: 0, expenses: 0 }
   );
 
+  
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString();
+  };
+
+  
+  const generateCSV = (data: Transaction[]) => {
+    const headers = ['Date', 'Type', 'Amount', 'Category', 'Account', 'Description'];
+    const rows = data.map(t => [
+      formatDate(t.date),
+      t.type,
+      t.amount.toString(),
+      t.category,
+      t.account,
+      t.description || ''
+    ]);
+    return [headers, ...rows].map(row => row.join(',')).join('\n');
+  };
+
+  
+  const downloadFile = (content: string, filename: string, type: string) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  
+  const handleGenerateReport = async (format: "PDF" | "CSV" | "EXCEL") => {
+    setIsExporting(true);
+    try {
+      const timestamp = new Date().toISOString().split('T')[0];
+      
+      switch (format) {
+        case "CSV":
+          const csvContent = generateCSV(filteredTransactions);
+          downloadFile(csvContent, `transactions-${timestamp}.csv`, 'text/csv');
+          break;
+
+        case "EXCEL":
+          const excelContent = '\ufeff' + generateCSV(filteredTransactions); //
+          downloadFile(excelContent, `transactions-${timestamp}.xlsx`, 'application/vnd.ms-excel');
+          break;
+
+        case "PDF":
+          const pdfContent = filteredTransactions.map(t => ({
+            date: formatDate(t.date),
+            type: t.type,
+            amount: new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            }).format(t.amount),
+            category: t.category,
+            account: t.account,
+            description: t.description || ''
+          }));
+
+          downloadFile(
+            JSON.stringify(pdfContent, null, 2),
+            `transactions-${timestamp}.json`,
+            'application/json'
+          );
+          break;
+      }
+    } catch (error) {
+      console.error('Error generating report:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
-      {/* Filters */}
       <div className="flex flex-wrap gap-4 items-end">
         <div className="space-y-2">
           <label className="text-sm font-medium">Search</label>
@@ -144,21 +213,24 @@ export function TransactionTable({
         <div className="flex gap-2 ml-auto">
           <Button
             variant="outline"
-            onClick={() => onGenerateReport("PDF")}
+            onClick={() => handleGenerateReport("PDF")}
+            disabled={isExporting}
           >
             <File className="w-4 h-4 mr-2" />
             PDF
           </Button>
           <Button
             variant="outline"
-            onClick={() => onGenerateReport("EXCEL")}
+            onClick={() => handleGenerateReport("EXCEL")}
+            disabled={isExporting}
           >
             <FileSpreadsheet className="w-4 h-4 mr-2" />
             Excel
           </Button>
           <Button
             variant="outline"
-            onClick={() => onGenerateReport("CSV")}
+            onClick={() => handleGenerateReport("CSV")}
+            disabled={isExporting}
           >
             <Download className="w-4 h-4 mr-2" />
             CSV
@@ -166,29 +238,27 @@ export function TransactionTable({
         </div>
       </div>
 
-      {/* Summary */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="bg-green-50 p-4 rounded-lg">
           <p className="text-sm text-green-600">Total Income</p>
           <p className="text-2xl font-bold text-green-700">
-            {new Intl.NumberFormat('en-US', {
+            {new Intl.NumberFormat('en-UK', {
               style: 'currency',
-              currency: 'USD'
+              currency: 'RWF'
             }).format(totals.income)}
           </p>
         </div>
         <div className="bg-red-50 p-4 rounded-lg">
           <p className="text-sm text-red-600">Total Expenses</p>
           <p className="text-2xl font-bold text-red-700">
-            {new Intl.NumberFormat('en-US', {
+            {new Intl.NumberFormat('en-UK', {
               style: 'currency',
-              currency: 'USD'
+            currency: 'RWF'
             }).format(totals.expenses)}
           </p>
         </div>
       </div>
 
-      {/* Table */}
       <div className="border rounded-lg">
         <Table>
           <TableHeader>
@@ -204,7 +274,7 @@ export function TransactionTable({
           <TableBody>
             {paginatedTransactions.map((transaction) => (
               <TableRow key={transaction.id}>
-                <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
+                <TableCell>{formatDate(transaction.date)}</TableCell>
                 <TableCell>
                   <span className={`px-2 py-1 rounded text-sm ${
                     transaction.type === "INCOME" 
@@ -217,9 +287,9 @@ export function TransactionTable({
                 <TableCell className={
                   transaction.type === "INCOME" ? "text-green-600" : "text-red-600"
                 }>
-                  {new Intl.NumberFormat('en-US', {
+                  {new Intl.NumberFormat('en-UK', {
                     style: 'currency',
-                    currency: 'USD'
+                    currency: 'RWF'
                   }).format(transaction.amount)}
                 </TableCell>
                 <TableCell>{transaction.category}</TableCell>
@@ -231,7 +301,6 @@ export function TransactionTable({
         </Table>
       </div>
 
-      {/* Pagination */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">
           Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredTransactions.length)} of {filteredTransactions.length} entries

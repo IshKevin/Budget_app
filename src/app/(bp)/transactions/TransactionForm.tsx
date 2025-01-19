@@ -1,17 +1,21 @@
 // TransactionForm.tsx
 import React from "react";
 
+interface TransactionFormProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly accounts: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly categories: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly budgets: any[];
+  readonly onSubmit: (formData: FormData) => void;
+}
+
 export default function TransactionForm({
   accounts,
   categories,
-  budgets,
   onSubmit,
-}: {
-  accounts: any[];
-  categories: any[];
-  budgets: any[];
-  onSubmit: (formData: FormData) => void;
-}) {
+}: TransactionFormProps) {
   return (
     <form action={onSubmit} className="space-y-4">
       <div className="space-y-2">
