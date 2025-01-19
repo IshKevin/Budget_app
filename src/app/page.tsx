@@ -13,7 +13,7 @@ export default function Home() {
           className="mx-auto mb-6"
         />
         <h1 className="text-4xl font-extrabold text-green-600">
-          Welcome to Your Personal Finance App
+          Welcome to WalletPro Your Personal Finance App
         </h1>
         <p className="mt-4 text-lg text-gray-600">
           Simplify your financial management. Track transactions, manage
