@@ -1,51 +1,74 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Card } from "@/components/ui/card"; // Import Card from ShadCN
-import { Avatar } from "@/components/ui/avatar"; // Import Avatar from ShadCN
+import { BellRing, CheckCircle, AlertCircle } from "lucide-react"; 
+import { Card } from "@/components/ui/card"; 
+import { Avatar } from "@/components/ui/avatar";
 
-export default async function ProfilePage() {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+export default function NotificationPage() {
+  // back and to be done when i get timeeeee
+  const notifications = [
+    {
+      id: 1,
+      type: "success",
+      message: "Your profile has been updated successfully.",
+      time: "2 hours ago",
+    },
+    {
+      id: 2,
+      type: "info",
+      message: "You have a new message from support.",
+      time: "4 hours ago",
+    },
+    {
+      id: 3,
+      type: "error",
+      message: "Failed to save your recent settings. Try again later.",
+      time: "1 day ago",
+    },
+  ];
+
+  
+  const renderIcon = (type: string) => {
+    switch (type) {
+      case "success":
+        return <CheckCircle className="text-green-500 w-6 h-6" />;
+      case "info":
+        return <BellRing className="text-blue-500 w-6 h-6" />;
+      case "error":
+        return <AlertCircle className="text-red-500 w-6 h-6" />;
+      default:
+        return <BellRing className="text-gray-500 w-6 h-6" />;
+    }
+  };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-green-100 via-white to-blue-100 flex items-center justify-center">
-      <Card className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg space-y-6">
-        <div className="flex justify-center">
-          <Avatar
-            src={"/assets/avatar.jpg"} // Replace with dynamic image if available
-            alt="User Avatar"
-            className="w-32 h-32 border-4 border-green-400"
-          />
+    <main className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-green-50 flex items-center justify-center p-6">
+      <Card className="w-full max-w-4xl p-6 bg-white shadow-xl rounded-lg space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-green-700">Notifications</h1>
+          <Avatar className="w-10 h-10 border-2 border-green-400">
+            <img src="./assets/avatar.jpg" alt="User Avatar" className="w-full h-full rounded-full" />
+          </Avatar>
         </div>
 
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-semibold text-green-700">
-            {user?.given_name} {user?.family_name}
-          </h1>
-          <p className="text-lg text-gray-600">{user?.email}</p>
-          <p className="text-sm text-gray-500">User name: {user?.username || "Not Available"}</p>
-        </div>
-
+        
         <div className="space-y-4">
-          <h2 className="text-xl font-medium text-green-700">Personal Details</h2>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Full Name</span>
-              <span className="text-gray-700">{user?.given_name} {user?.family_name}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Email</span>
-              <span className="text-gray-700">{user?.email}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Username</span>
-              <span className="text-gray-700">{user?.username || "Not Available"}</span>
-            </div>
-          </div>
-        </div>
+          {notifications.map((notification) => (
+            <div
+              key={notification.id}
+              className="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition transform hover:scale-105"
+            >
+              <div className="mr-4">{renderIcon(notification.type)}</div>
 
+              <div className="flex-1">
+                <p className="text-gray-800 font-medium">{notification.message}</p>
+                <p className="text-sm text-gray-500">{notification.time}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        
         <div className="text-center">
-          <button className="w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">
-            Edit Profile
+          <button className="w-full py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 transition">
+            View All Notifications
           </button>
         </div>
       </Card>
