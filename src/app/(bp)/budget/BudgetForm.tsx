@@ -1,6 +1,13 @@
+// src/app/(bp)/budget/BudgetForm.tsx
 "use client";
 
 import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Budget {
   id?: number;
@@ -39,9 +46,7 @@ export default function BudgetForm({ budget, categories, onSubmit }: BudgetFormP
 
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -52,17 +57,30 @@ export default function BudgetForm({ budget, categories, onSubmit }: BudgetFormP
     }));
   };
 
+  const validateDates = () => {
+    const start = new Date(formData.startDate);
+    const end = new Date(formData.endDate);
+    if (end <= start) {
+      setError("End date must be after start date.");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Clear previous errors
+    setError(null);
+
+    if (!validateDates()) return;
+
     try {
       await onSubmit({
         ...formData,
         startDate: new Date(formData.startDate).toISOString(),
         endDate: new Date(formData.endDate).toISOString(),
       });
+
       if (!budget) {
-        // Reset form if it's a new budget
         setFormData({
           name: "",
           categoryId: 0,
@@ -79,128 +97,116 @@ export default function BudgetForm({ budget, categories, onSubmit }: BudgetFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-2xl font-bold mb-4">
-        {budget ? "Edit Budget" : "New Budget"}
-      </h2>
+    <TooltipProvider>
+      <Card className="p-6 shadow-lg">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+          {budget ? "Edit Budget" : "Create New Budget"}
+        </h2>
 
-      {error && (
-        <div className="p-2 mb-4 text-red-600 bg-red-100 border border-red-300 rounded">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 text-red-600 border border-red-300 rounded-md">
+            {error}
+          </div>
+        )}
 
-      <div className="space-y-2">
-        <label htmlFor="name" className="block text-sm font-medium">
-          Budget Name
-        </label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full p-2 border rounded-md"
-          required
-          aria-label="Budget Name"
-        />
-      </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Budget Name */}
+          <div className="grid gap-2">
+            <Label htmlFor="name">Budget Name</Label>
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="e.g., Monthly Groceries"
+              required
+            />
+          </div>
 
-      <div className="space-y-2">
-        <label htmlFor="categoryId" className="block text-sm font-medium">
-          Category
-        </label>
-        <select
-          id="categoryId"
-          name="categoryId"
-          value={formData.categoryId}
-          onChange={handleChange}
-          className="w-full p-2 border rounded-md"
-          required
-          aria-label="Category"
-        >
-          <option value={0}>Select a category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      </div>
+          {/* Category Dropdown */}
+          <div className="grid gap-2">
+            <Label htmlFor="categoryId">Category</Label>
+            <Select
+              value={formData.categoryId.toString()}
+              onValueChange={(value) =>
+                setFormData((prev) => ({ ...prev, categoryId: parseInt(value) }))
+              }
+            >
+              <SelectTrigger id="categoryId">
+                <SelectValue placeholder="Select a Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id.toString()}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-      <div className="space-y-2">
-        <label htmlFor="amount" className="block text-sm font-medium">
-          Budget Amount
-        </label>
-        <input
-          id="amount"
-          type="number"
-          name="amount"
-          value={formData.amount}
-          onChange={handleChange}
-          step="0.01"
-          className="w-full p-2 border rounded-md"
-          required
-          aria-label="Budget Amount"
-        />
-      </div>
+          {/* Amount */}
+          <div className="grid gap-2">
+            <Label htmlFor="amount">Budget Amount</Label>
+            <Input
+              id="amount"
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
 
-      <div className="space-y-2">
-        <label htmlFor="startDate" className="block text-sm font-medium">
-          Start Date
-        </label>
-        <input
-          id="startDate"
-          type="date"
-          name="startDate"
-          value={formData.startDate}
-          onChange={handleChange}
-          className="w-full p-2 border rounded-md"
-          required
-          aria-label="Start Date"
-        />
-      </div>
+          {/* Dates */}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-2">
+              <Label htmlFor="startDate">Start Date</Label>
+              <Input
+                id="startDate"
+                type="date"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="endDate">End Date</Label>
+              <Input
+                id="endDate"
+                type="date"
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
 
-      <div className="space-y-2">
-        <label htmlFor="endDate" className="block text-sm font-medium">
-          End Date
-        </label>
-        <input
-          id="endDate"
-          type="date"
-          name="endDate"
-          value={formData.endDate}
-          onChange={handleChange}
-          className="w-full p-2 border rounded-md"
-          required
-          aria-label="End Date"
-        />
-      </div>
+          {/* Notification Threshold */}
+          <div className="grid gap-2">
+            <Label htmlFor="notificationThreshold">Alert Threshold (%)</Label>
+            <Input
+              id="notificationThreshold"
+              type="number"
+              name="notificationThreshold"
+              value={formData.notificationThreshold}
+              onChange={handleChange}
+              min="1"
+              max="100"
+              required
+            />
+          </div>
 
-      <div className="space-y-2">
-        <label htmlFor="notificationThreshold" className="block text-sm font-medium">
-          Notification Threshold (%)
-        </label>
-        <input
-          id="notificationThreshold"
-          type="number"
-          name="notificationThreshold"
-          value={formData.notificationThreshold}
-          onChange={handleChange}
-          min="1"
-          max="100"
-          className="w-full p-2 border rounded-md"
-          required
-          aria-label="Notification Threshold"
-        />
-      </div>
-
-      <button
-        type="submit"
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-      >
-        {budget ? "Update" : "Create"} Budget
-      </button>
-    </form>
+          {/* Submit Button */}
+          <Button type="submit" className="w-full">
+            {budget ? "Update Budget" : "Create Budget"}
+          </Button>
+        </form>
+      </Card>
+    </TooltipProvider>
   );
 }
