@@ -1,114 +1,39 @@
-"use client"
+// TransactionForm.tsx
+import React from "react";
 
-import React, { useState, useTransition } from 'react';
-
-type PersonalAccount = {
-  id: number;
-  name: string;
-  type: "BANK" | "MOBILE_MONEY" | "CASH";
-  balance: number;
-  currency: string;
-};
-
-type FinancialTransaction = {
-  id: number;
-  kindeId: string;
-  accountId: number;
-  categoryId: number;
-  type: "INCOME" | "EXPENSE";
-  amount: number;
-  description?: string;
-  date: Date;
-};
-
-interface TransactionFormProps {
-  accounts: PersonalAccount[];
-  categories: { id: number; name: string }[];
-  transaction?: FinancialTransaction;
-  onSubmit: (data: FormData) => Promise<void>;
-}
-
-const TransactionForm = ({ 
-  accounts, 
+export default function TransactionForm({
+  accounts,
   categories,
-  transaction, 
-  onSubmit 
-}: TransactionFormProps) => {
-  const [error, setError] = useState<string>('');
-  const [isPending, startTransition] = useTransition();
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
-
-    try {
-      const formData = new FormData(e.currentTarget);
-      
-      startTransition(async () => {
-        try {
-          await onSubmit(formData);
-          if (!transaction) {
-            (e.target as HTMLFormElement).reset();
-            // Set default date to today
-            const dateInput = document.getElementById('date') as HTMLInputElement;
-            if (dateInput) {
-              dateInput.value = new Date().toISOString().split('T')[0];
-            }
-          }
-        } catch (error) {
-          setError(error instanceof Error ? error.message : 'Failed to submit transaction');
-        }
-      });
-    } catch (error) {
-      setError('Failed to submit transaction. Please try again.');
-      console.error('Error submitting transaction:', error);
-    }
-  };
-
+  budgets,
+  onSubmit,
+}: {
+  accounts: any[];
+  categories: any[];
+  budgets: any[];
+  onSubmit: (formData: FormData) => void;
+}) {
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-2xl font-bold mb-4">
-        {transaction ? 'Edit Transaction' : 'New Transaction'}
-      </h2>
-
-      {error && (
-        <div className="p-3 mb-4 text-sm text-red-500 bg-red-50 rounded-md">
-          {error}
-        </div>
-      )}
-
+    <form action={onSubmit} className="space-y-4">
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="accountId">
-          Account
-        </label>
+        <label className="block text-sm font-medium text-green-800">Account</label>
         <select
-          id="accountId"
           name="accountId"
-          defaultValue={transaction?.accountId || accounts[0]?.id || ''}
-          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-          required
+          className="w-full px-4 py-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-300"
         >
-          <option value="">Select an account</option>
           {accounts.map((account) => (
             <option key={account.id} value={account.id}>
-              {account.name} ({account.type} - {account.currency})
+              {account.name}
             </option>
           ))}
         </select>
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="categoryId">
-          Category
-        </label>
+        <label className="block text-sm font-medium text-green-800">Category</label>
         <select
-          id="categoryId"
           name="categoryId"
-          defaultValue={transaction?.categoryId || categories[0]?.id || ''}
-          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-          required
+          className="w-full px-4 py-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-300"
         >
-          <option value="">Select a category</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
@@ -118,79 +43,50 @@ const TransactionForm = ({
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="type">
-          Type
-        </label>
+        <label className="block text-sm font-medium text-green-800">Type</label>
         <select
-          id="type"
           name="type"
-          defaultValue={transaction?.type || 'EXPENSE'}
-          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-300"
         >
-          <option value="EXPENSE">Expense</option>
           <option value="INCOME">Income</option>
+          <option value="EXPENSE">Expense</option>
         </select>
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="amount">
-          Amount
-        </label>
+        <label className="block text-sm font-medium text-green-800">Amount</label>
         <input
-          id="amount"
-          name="amount"
           type="number"
-          step="0.01"
-          min="0"
-          defaultValue={transaction?.amount || ''}
-          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-          required
+          name="amount"
+          placeholder="Enter amount"
+          className="w-full px-4 py-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-300"
         />
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="date">
-          Date
-        </label>
+        <label className="block text-sm font-medium text-green-800">Date</label>
         <input
-          id="date"
-          name="date"
           type="date"
-          defaultValue={transaction?.date 
-            ? new Date(transaction.date).toISOString().split('T')[0] 
-            : new Date().toISOString().split('T')[0]}
-          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-          required
+          name="date"
+          className="w-full px-4 py-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-300"
         />
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="description">
-          Description
-        </label>
+        <label className="block text-sm font-medium text-green-800">Description</label>
         <textarea
-          id="description"
           name="description"
-          defaultValue={transaction?.description || ''}
-          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-          rows={3}
-        />
+          placeholder="Enter a description"
+          className="w-full px-4 py-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-300"
+        ></textarea>
       </div>
 
       <button
         type="submit"
-        disabled={isPending}
-        className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300"
+        className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:ring-2 focus:ring-green-300"
       >
-        {isPending 
-          ? 'Processing...' 
-          : transaction 
-            ? 'Update Transaction' 
-            : 'Add Transaction'
-        }
+        Add Transaction
       </button>
     </form>
   );
-};
-
-export default TransactionForm;
+}
