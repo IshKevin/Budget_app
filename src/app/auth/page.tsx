@@ -14,10 +14,14 @@ export default function AuthPage() {
         </p>
         <div className="flex justify-center space-x-4">
           <button className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-full shadow-lg hover:bg-blue-600 transition duration-300">
-            <LoginLink>Sign In</LoginLink>
+              <LoginLink>
+                 Log In
+              </LoginLink>
           </button>
           <button className="px-6 py-3 bg-green-500 text-white font-semibold rounded-full shadow-lg hover:bg-green-600 transition duration-300">
-            <RegisterLink>Sign Up</RegisterLink>
+            <RegisterLink>
+               Sign Up
+            </RegisterLink>
           </button>
         </div>
       </div>
