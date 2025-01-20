@@ -15,49 +15,49 @@
 
 ## Viewing Transactions
 
- 1. [ ] Display all transactions for a logged-in user in a table or list.
- 2. [ ] Allow users to filter transactions by account, type (income/expense), date range, and category.
- 3. [ ] Implement pagination to improve performance when there are many transactions.
- 4. [ ] Editing and Deleting Transactions
- 5. [ ] Allow users to edit transaction details and save the changes.
- 6. [ ] Allow users to delete transactions they no longer need.
- 7. [ ] Confirm with the user before deleting a transaction.
+ 1. [x] Display all transactions for a logged-in user in a table or list.
+ 2. [x] Allow users to filter transactions by account, type (income/expense), date range, and category.
+ 3. [x] Implement pagination to improve performance when there are many transactions.
+ 4. [x] Editing and Deleting Transactions
+ 5. [x] Allow users to edit transaction details and save the changes.
+ 6. [x] Allow users to delete transactions they no longer need.
+ 7. [x] Confirm with the user before deleting a transaction.
 
 ## Categories and Subcategories
 
- 1. [ ] Allow users to create categories and subcategories for organizing transactions.
- 2. [ ] Provide the option to edit or delete categories and subcategories.
- 3. [ ] Ensure users can assign a category or subcategory to a transaction during creation or editing.
+ 1. [x] Allow users to create categories and subcategories for organizing transactions.
+ 2. [x] Provide the option to edit or delete categories and subcategories.
+ 3. [x] Ensure users can assign a category or subcategory to a transaction during creation or editing.
 
 ## Budget Management
 
-1. [ ] Allow users to set a spending limit for specific categories or subcategories.
-2. [ ] Notify users if their spending exceeds the set budget for a category.
-3. [ ] Provide an interface for users to view and update their budget limits.
+1. [x] Allow users to set a spending limit for specific categories or subcategories.
+2. [x] Notify users if their spending exceeds the set budget for a category.
+3. [x] Provide an interface for users to view and update their budget limits.
 
 ## Reports and Insights
 
-1. [ ] Allow users to generate a report of their transactions for a specific time period.
-2. [ ] Include a breakdown of income and expenses by account and category in the report.
-3. [ ] Allow users to export the report in PDF or CSV format.
+1. [x] Allow users to generate a report of their transactions for a specific time period.
+2. [x] Include a breakdown of income and expenses by account and category in the report.
+3. [x] Allow users to export the report in PDF or CSV format.
 
 ## Dashboard and Visualization
 
-1. [ ] Display a summary of the user’s financial activity on the dashboard, including total income, total expenses, and remaining budget.
-2. [ ] Create visual charts pie charts and bar charts showing income and expenses by category or account.
-3. [ ] Ensure the dashboard updates dynamically as new transactions are added.
+1. [x] Display a summary of the user’s financial activity on the dashboard, including total income, total expenses, and remaining budget.
+2. [x] Create visual charts pie charts and bar charts showing income and expenses by category or account.
+3. [x] Ensure the dashboard updates dynamically as new transactions are added.
 
 ## Managing Accounts
 
-1. [ ] Allow users to add multiple accounts (e.g., bank, mobile money, cash) for tracking transactions.
-2. [ ] Provide the ability to edit or delete accounts as needed.
-3. [ ] Link each transaction to a specific account selected by the user.
+1. [x] Allow users to add multiple accounts (e.g., bank, mobile money, cash) for tracking transactions.
+2. [x] Provide the ability to edit or delete accounts as needed.
+3. [x] Link each transaction to a specific account selected by the user.
 
 ## Notifications
 
-1. [ ] Notify users when their spending exceeds a set budget.
-2. [ ] Allow users to set reminders for reports or specific transactions.
-3. [ ] Display notifications in the app and optionally send email alerts.
+1. [x] Notify users when their spending exceeds a set budget.
+2. [x] Allow users to set reminders for reports or specific transactions.
+3. [x] Display notifications in the app and optionally send email alerts.
 
 ## Testing and Quality Assurance
 
@@ -66,9 +66,9 @@
 
 ## Deployment and Monitoring
 
-1. [ ] Deploy the application to Vercel.
+1. [x] Deploy the application to Vercel.
 
 ## Documentation
 
 1. [ ] Create a user guide for setting up and using the application.
-2. [ ] Add clear instructions in the README for developers to run the project locally.
+2. [x] Add clear instructions in the README for developers to run the project locally.
