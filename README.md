@@ -33,7 +33,7 @@ Follow the steps below to set up and run WalletPro on your local environment:
 
 ```bash
 git clone https://github.com/IshKevin/Budget_app.git
-cd Budget_app
+cd walletpro
 ```
 
 ### 2. Install Dependencies
@@ -84,7 +84,7 @@ Run the development server:
 npm run dev
 ```
 
-Access the project at: [http://localhost:3000/](http://localhost:3000/)
+Access the project at: (<http://localhost:3000/home>)
 
 ---
 
@@ -94,6 +94,34 @@ Access the project at: [http://localhost:3000/](http://localhost:3000/)
 - **Expense Tracking**: Manage and track your financial data.
 - **Responsive Design**: Fully responsive UI built with Tailwind CSS.
 - **Modern Database**: Leveraging Neon for reliable database management with Drizzle ORM for migrations and schema generation.
+
+---
+
+## Application Pages and Their Functionalities
+
+### 1. Dashboard Page
+- Provides an overview of financial statistics in graphical format.
+- Displays detailed information about money flow and budgets.
+
+### 2. Budget Page
+- Used to input and manage budget data.
+- Provides detailed insights into budgeting.
+
+### 3. Transaction Page
+- Displays a list of all transactions.
+- Provides detailed information for each transaction.
+
+### 4. Report Page
+- Generates comprehensive reports about financial data.
+- Details spending patterns and financial summaries.
+
+### 5. Category Page
+- Organizes transactions into categories.
+- Helps in better classification and tracking of financial activities.
+
+### 6. Account Page
+- Allows users to create and manage accounts.
+- Provides detailed account information and data management.
 
 ---
 
