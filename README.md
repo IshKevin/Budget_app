@@ -32,7 +32,7 @@ Follow the steps below to set up and run WalletPro on your local environment:
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/IshKevin/Budget_app.git
 cd Budget_app
 ```
 
